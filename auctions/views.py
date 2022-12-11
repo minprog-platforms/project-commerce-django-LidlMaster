@@ -4,11 +4,63 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User
+from .models import User, Category, Listing
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    Isactive = Listing.objects.filter(activelisting=True)
+    cats = Category.objects.all()
+    return render(request, "auctions/index.html", {
+        "listings":  Isactive,
+        "categories" : cats
+    })
+
+def showgroup(request):
+    if request.method == "POST":
+        input = request.POST['category']
+        category = Category.objects.get(grouping=input)
+        Isactive = Listing.objects.filter(activelisting=True, category=category)
+        cats = Category.objects.all()
+        return render(request, "auctions/index.html", {
+            "listings":  Isactive,
+            "categories" : cats
+        })
+
+def enternew(request):
+    if request.method == "GET":
+        cats = Category.objects.all()
+        return render(request, "auctions/enter.html", {
+            "categories": cats
+        })
+    else:
+        #entry options
+        title = request.POST["title"]
+        image = request.POST["image"]
+        price = request.POST["price"]
+        category = request.POST["category"]
+        description = request.POST["description"]
+        #logged in user
+        currentuser = request.user
+        data = Category.objects.get(grouping=category)
+        #listing
+        listing = Listing(
+            title=title,
+            image=image,
+            creator=currentuser,
+            price=float(price),
+            category=data,
+            description=description
+        )
+        #save into datbase
+        listing.save()
+        #show on page
+        return HttpResponseRedirect(reverse(index))
+
+def listingpage (request, id):
+    data = Listing.objects.get( item=id)
+    return render(request, "auctions/listingpage.html", {
+        "listing": data
+    })
 
 
 def login_view(request):
