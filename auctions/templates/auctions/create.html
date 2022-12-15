@@ -1,27 +1,29 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Enter Listing</h2>
+    <h2>Create New Listing</h2>
 
-    <form action= "{%url 'enter'%}" method = "POST">
+    <form action= "{%url 'create'%}" method = "POST">
         {% csrf_token %}
+        <!-- Bootstrap -->
         <div class = from-group>
             <label for="title">Listing Title </label><br>
             <input type="text" name="title" class="form-control" id="title" placeholder="Enter a title:"><br><br>
         </div>
         <div class = from-group>
-            <label for="image">Listing Image </label><br>
-            <input type="text" name="image" class="form-control" id="image" placeholder="Enter image URL:"><br><br>
+            <label for="imageUrl">Listing Image </label><br>
+            <input type="text" name="imageUrl" class="form-control" id="imageUrl" placeholder="Enter image URL:"><br><br>
         </div>
         <div class = from-group>
             <label for="price">Listing Price </label><br>
-            <input type="number" name="price" class="form-control" id="price" placeholder="Enter a price:"><br><br>
+            <input type="number" min="0" name="price" class="form-control" id="price" placeholder="Enter a price:"><br><br>
          </div>
+         <!-- w3schools -->
          <div class = from-group>
             <label for="category">Select category</label><br>
             <select name="category" id="category">
             {% for cat in categories %}
-                <option value="{{cat}}">{{cat}}</option>
+                <option value="{{ cat }}">{{ cat }}</option>
             {% endfor %}
             </select>
         </div>

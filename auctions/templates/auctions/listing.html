@@ -1,0 +1,121 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <div class="container">
+        {% if message %}
+            {% if updated %}
+                <!-- https://getbootstrap.com/docs/4.0/components/alerts/ -->
+               <div class="alert alert-success" role="alert">
+                    {{ message }}
+                </div>
+            {% else %}
+                <!-- https://getbootstrap.com/docs/4.0/components/alerts/ -->
+                <div class="alert alert-danger" role="alert">
+                    {{  message }}
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+   
+    {% if user == listing.price.user and not listing.isActive %}
+        <!-- https://getbootstrap.com/docs/4.0/components/alerts/ -->
+       <div class="alert alert-success" role="alert">
+            You won the auction! The auctioned item is yours!
+        </div>
+
+    <div class="row mx-3">
+        {% if user.is_authenticated and listing.isActive %}
+            {% if isOwner %}
+                <form action="{% url 'closeAuction' id=listing.id %}" method="POST" class="mx-3">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Close My Auction</button>
+                </form>
+            {% endif %}
+        {% endif %}
+
+    <h2> Item: {{listing.title}}</h2>
+
+    <div class="row mx-3">
+        {% if user.is_authenticated and listing.isActive%}
+            {%if isListingInWatchlist %}
+                <form action="{% url 'removeWatchlist' id=listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Remove From Watchlist</button>
+                </form>
+            {%else%}
+                <form action="{% url 'addWatchlist' id=listing.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-success">Add To Watchlist</button>
+                </form>
+            {% endif %}
+
+        {% endif %}
+    </div>
+
+    <img src="{{ listing.imageUrl }}" alt="no image available" width = "500px">
+    <h6>Current Price: €{{ listing.price.bid }}</h6>
+    <!-- <p>{{ listing.date }}</p>        -->
+    <p>Lister: {{ listing.owner }}</p>    
+    <p>{{ listing.description }}</p>
+
+    <div class="row mx-3">
+        <h2>Bids</h2><br/>
+        {% if user.is_authenticated and listing.isActive %}
+        
+            <form action="{% url 'addBid'  id=listing.id %}" method="POST">
+                {% csrf_token %}
+                <div class = from-group>
+                    <input type="number" min="0" name="newBid" placeholder="Enter Bid">
+                    <button type="submit" class="btn btn-warning">Add Bid</button>
+                </div>              
+            </form>
+        {% endif %}
+        <p>{{ message }}</p>
+
+    </div>
+        <br/>
+        <div class="row mx-3">
+            <!-- comments code source: https://getbootstrap.com/docs/4.0/components/list-group/ -->
+            <ul class="list-group">
+            {% for bid in allBids%}
+                <li class="list-group-item">
+                    <br/>
+                    {{ bid.bid }}
+                    </br>
+                    <p>Added by: <i>{{comment.commenter}}</i></p>
+                </li>
+                {% endfor %}
+            </ul>
+
+
+    <div class="row mx-3">
+        <h2>Comments</h2><br/>
+        {% if user.is_authenticated %}
+        
+            <form action="{% url 'addComment'  id=listing.id %}" method="POST">
+                {% csrf_token %}
+                <div class = from-group>
+                    <input type="text" name="newComment" placeholder="Write Comment">
+                    <button type="submit" class="btn btn-primary">Add Comment</button>
+                </div>              
+            </form>
+        {% endif %}
+    </div>
+        <br/>
+    <div class="row mx-3">
+        <!-- comments code source: https://getbootstrap.com/docs/4.0/components/list-group/ -->
+        <ul class="list-group">
+        {% for comment in allComments%}
+            <li class="list-group-item">
+                <br/>
+                {{ comment.comment }}
+                </br>
+                <p>Commented by: <i>{{comment.commenter}}</i></p>
+            </li>
+            {% endfor %}
+        </ul>
+        
+
+
+    </div>
+{% endblock %}

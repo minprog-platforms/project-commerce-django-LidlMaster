@@ -1,8 +1,10 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    
     <h2>Active Listings</h2>
-        <form avtion="{% url 'showgroup'%]" method="POST">
+    <div>
+        <form style="margin-top" action="{% url 'displayCategory'%]" method="POST" class="my-3">
             {% csrf_token %}
             <label for="category">Select category</label><br>
             <select name="category" id="category">
@@ -10,23 +12,31 @@
                     <option value="{{cat}}">{{cat}}</option>
                 {% endfor %}
             </select>
-        <br><button type="submit" class="btn btn-primary">Show Category</button><br>
+        <!-- Bootstrap -->
+        <br><button type="submit" class="btn btn-primary">Select</button><br>
 
         </form>
+    </div>
+
+        <!-- code source for card: https://getbootstrap.com/docs/4.0/components/card/ -->
+    <div class="row mx-3">
         {% for listing in listings %}
-            <div class="row mx-3">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="{{ listing.image }}" alt="{{ listing.title}}">
-                    <div class="card-body">
-                        <!-- <p class="card-text">{{listing.datetime}}</p> -->
-                        <h5 class="card-title">{{listing.title}}</h5>
-                        <p class="card-text">{{listing.price}}</p>
-                        <p class="card-text">{{listing.creator}}</p>
-                        <p class="card-text">{{listing.description}}</p>
-                        <a href="{% url 'listing' id=listing.id %}" class="btn btn-primary">Details</a>
-                    </div>
-                </div>
+        <div class="card mx-3" style="width: 18rem;">
+            <img class="card-img-top" src="{{ listing.imageUrl }}" alt="No image available" height="220px" ">
+            <div class="card-body">
+                <h5 class="card-title">{{ listing.title }}</h5>
+                <p class="card-text">{{ listing.description }}</p>
             </div>
-            <h1> {{ listings.title }}</h1>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">€{{ listing.price }}</li>
+                <li class="list-group-item">Lister: {{ listing.owner }}</li>
+                <!-- <li class="list-group-item">{{ listing.date}}</li> -->
+            </ul>
+            <div class="card-body">
+                <a href="{% url 'listing' id=listing.id %}" class="btn btn-primary">Details</a>
+                <!-- <a href="#" class="card-link">Another link</a> -->
+            </div>
+        </div><br>
         {% endfor%}
+    </div>
 {% endblock %}

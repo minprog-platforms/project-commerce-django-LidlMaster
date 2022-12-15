@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Watchlist</h2>
+
+        <!-- code source for card: https://getbootstrap.com/docs/4.0/components/card/ -->
+        <div class="row mx-3">
+            {% for listing in listings %}
+            <div class="card mx-3" style="width: 18rem;">
+                <img class="card-img-top" src="{{ listing.imageUrl }}" alt="No image available" height="220px" ">
+                <div class="card-body">
+                  <h5 class="card-title">{{ listing.title }}</h5>
+                  <p class="card-text">{{ listing.description }}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item">€{{ listing.price }}</li>
+                  <li class="list-group-item">Lister: {{ listing.owner }}</li>
+                  <!-- <li class="list-group-item">{{ listing.date}}</li> -->
+                </ul>
+                <div class="card-body">
+                  <a href="{% url 'listing' id=listing.id %}" class="btn btn-primary">Details</a>
+                  <!-- <a href="#" class="card-link">Another link</a> -->
+                </div>
+              </div><br>
+              {% endfor%}
+            </div>
+{% endblock %}

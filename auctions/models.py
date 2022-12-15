@@ -8,33 +8,41 @@ class User(AbstractUser):
     # phone = models.PositiveIntegerField(max_length=10)
 
 class Category(models.Model):
-    grouping = models.CharField(max_length=65)
+    categoryName = models.CharField(max_length=65)
 
     def __str__(self) -> str:
-        return self.grouping
+        return self.categoryName
 
+class Bid(models.Model):
+    buyer = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="userBid" )
+    bid = models.IntegerField(default=0)
+
+    # def __str__(self) -> str:
+    #     return self.bid
 
 class Listing(models.Model):
     title = models.CharField(max_length=64)
     # For image use URL --> text
-    image = models.CharField(max_length=1000) 
-    date = models.DateTimeField(default=datetime.now, blank=True)
-    price = models.FloatField()
+    imageUrl = models.CharField(max_length=1000)
+    # date = models.DateTimeField(default=datetime.now, blank=True, null=True, related_name="listing")
+    # date = models.DateTimeField(default=datetime.now, blank=True)
+    price = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, null=True, related_name="bidPrice" )
     # currentbid = models.ForeignKey(Bids, on_delete=models.CASCADE, blank=True, null=True, related_name="bid")
-    activelisting = models.BooleanField(default=True)
-    creator = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user")
+    isActive = models.BooleanField(default=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user")
     description = models.CharField(max_length=500)
-    category = models.ForeignKey(Category, on_delete=models.PROTECT, blank=True, null=True, related_name="category")
-    watchlist = models.ManyToManyField(User, blank=True, null=True, related_name="listingsWatchlist")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, related_name="category")
+    #  Lecture notes Many to many realationships-->
+    watchlist = models.ManyToManyField(User, blank=True, null=True, related_name="listingWatchlist")
 
     def __str__(self) -> str:
         return self.title
         
-# class Bids(models.Model):
-#     buyer = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="user" )
-#     bid = models.FloatField()
+class Comment(models.Model):
+    commenter = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="userComment")
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE, blank=True, null=True, related_name="listingComment")
+    comment = models.CharField(max_length=500)
+    # date = models.DateTimeField(default=datetime.now, blank=True)
 
-
-# class Comments(models.Model):
-#     commenter = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="User")
-#     comment = models.CharField(max_length=500)
+    def __str__(self):
+        return f"{self.commenter} comment on {self.listing}"
