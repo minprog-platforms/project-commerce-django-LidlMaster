@@ -1,6 +1,7 @@
 Lisl Meester
 11920963
 # Procesboek Project (Alleen Opdrachten)
+Voor een versie met afbeeldingen/screenshots, download de pdf versie van dit bestand.
 
 ## Wiki
 Toen ik begon aan wiki, had ik zelfs na het kijken van de bijbehorende lecture eigenlijk geen idee waar ik moest beginnen. Zoveel verschillende documenten om tegelijk op te letten was overwhelming. Het hielp ontzettend om de aanpak van andere mensen die django doen te horen. Ik overlegde met Laura en Fien en Fien hielp mij ook met het begin van een stappenplan schrijven. 
