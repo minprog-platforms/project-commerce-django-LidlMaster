@@ -15,17 +15,16 @@ class Category(models.Model):
 
 class Bid(models.Model):
     buyer = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="userBid" )
-    bid = models.IntegerField(default=0)
+    bid = models.FloatField(default=0)
 
-    # def __str__(self) -> str:
-    #     return self.bid
+    def __str__(self) -> str:
+        return str(self.bid)
 
 class Listing(models.Model):
     title = models.CharField(max_length=64)
     # For image use URL --> text
     imageUrl = models.CharField(max_length=1000)
-    # date = models.DateTimeField(default=datetime.now, blank=True, null=True, related_name="listing")
-    # date = models.DateTimeField(default=datetime.now, blank=True)
+    date = models.DateTimeField(default=datetime.now, blank=True)
     price = models.ForeignKey(Bid, on_delete=models.CASCADE, blank=True, null=True, related_name="bidPrice" )
     # currentbid = models.ForeignKey(Bids, on_delete=models.CASCADE, blank=True, null=True, related_name="bid")
     isActive = models.BooleanField(default=True)
@@ -42,7 +41,7 @@ class Comment(models.Model):
     commenter = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name="userComment")
     listing = models.ForeignKey(Listing, on_delete=models.CASCADE, blank=True, null=True, related_name="listingComment")
     comment = models.CharField(max_length=500)
-    # date = models.DateTimeField(default=datetime.now, blank=True)
+    date = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         return f"{self.commenter} comment on {self.listing}"

@@ -44,7 +44,7 @@ def createListing(request):
         currentUser = request.user
         categoryData = Category.objects.get(categoryName=category)
         # bid object
-        bid = Bid(bid=float(price), user=currentUser)
+        bid = Bid(bid=float(price), buyer=currentUser)
         bid.save()
         #listing -- Lecture notes --        
         newListing = Listing( 
@@ -65,11 +65,13 @@ def listing (request, id):
     isListingInWatchlist = request.user in listingData.watchlist.all()
     allComments = Comment.objects.filter(listing=listingData)
     isOwner = request.user.username == listingData.owner.username
+    date = listingData.date
     return render(request, "auctions/listing.html", {
         "listing": listingData,
         "isListingInWatchlist":isListingInWatchlist,
         "allComments": allComments,
-        "isOwner": isOwner
+        "isOwner": isOwner,
+        "date": date
     })
 
 def addBid(request, id):
@@ -78,8 +80,9 @@ def addBid(request, id):
     isListingInWatchlist = request.user in listingData.watchlist.all()
     allComments = Comment.objects.filter(listing=listingData)
     isOwner = request.user.username == listingData.owner.username
+    date = listingData.date
     if float(newBid) > listingData.price.bid:
-        updateBid = Bid(user=request.user, bid=float(newBid))
+        updateBid = Bid(buyer=request.user, bid=float(newBid))
         updateBid.save()
         listingData.price = updateBid
         listingData.save()
@@ -90,6 +93,7 @@ def addBid(request, id):
             "isListingInWatchlist":isListingInWatchlist,
             "allComments": allComments,
             "isOwner": isOwner,
+            "date": date
         })
     else:
         return render(request, "auctions/listing.html", {
@@ -127,6 +131,7 @@ def addComment(request, id):
         commenter = currentUser,
         listing = listingData,
         comment = comment
+
     )
     newComment.save()
     return HttpResponseRedirect(reverse("listing",args=(id, )))

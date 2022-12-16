@@ -3,7 +3,7 @@
 {% block body %}
     
     <h2>Active Listings</h2>
-    <div>
+    <div class="row mx-3">
         <form style="margin-top" action="{% url 'displayCategory'%]" method="POST" class="my-3">
             {% csrf_token %}
             <label for="category">Select category</label><br>
@@ -11,9 +11,8 @@
                 {% for cat in categories %}
                     <option value="{{cat}}">{{cat}}</option>
                 {% endfor %}
-            </select>
-        <!-- Bootstrap -->
-        <br><button type="submit" class="btn btn-primary">Select</button><br>
+            </select> 
+        <button type="submit" class="btn btn-primary">Select</button><br>
 
         </form>
     </div>
@@ -22,8 +21,9 @@
     <div class="row mx-3">
         {% for listing in listings %}
         <div class="card mx-3" style="width: 18rem;">
-            <img class="card-img-top" src="{{ listing.imageUrl }}" alt="No image available" height="220px" ">
+            <img class="card-img-top" src="{{ listing.imageUrl }}" alt="No image available" height="220px">
             <div class="card-body">
+                <p class="card-text">{{ listing.date }}</p>              
                 <h5 class="card-title">{{ listing.title }}</h5>
                 <p class="card-text">{{ listing.description }}</p>
             </div>

@@ -22,7 +22,7 @@
        <div class="alert alert-success" role="alert">
             You won the auction! The auctioned item is yours!
         </div>
-
+        {% endif %}
     <div class="row mx-3">
         {% if user.is_authenticated and listing.isActive %}
             {% if isOwner %}
@@ -51,11 +51,12 @@
 
         {% endif %}
     </div>
-
-    <img src="{{ listing.imageUrl }}" alt="no image available" width = "500px">
+    
+    <img src="{{ listing.imageUrl }}" alt="no image available" style= "width:500px">
+    <p><i>Date posted: {{listing.date}} by: {{ listing.owner }} </i></p>
     <h6>Current Price: €{{ listing.price.bid }}</h6>
     <!-- <p>{{ listing.date }}</p>        -->
-    <p>Lister: {{ listing.owner }}</p>    
+    <!-- <p>Lister: {{ listing.owner }}</p>     -->
     <p>{{ listing.description }}</p>
 
     <div class="row mx-3">
@@ -108,11 +109,13 @@
         {% for comment in allComments%}
             <li class="list-group-item">
                 <br/>
-                {{ comment.comment }}
+                {{comment.date}}
+                <br/>
+               <strong> {{ comment.comment }} </strong>
                 </br>
                 <p>Commented by: <i>{{comment.commenter}}</i></p>
             </li>
-            {% endfor %}
+        {% endfor %}
         </ul>
         
 
